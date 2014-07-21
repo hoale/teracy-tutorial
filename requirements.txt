@@ -1,0 +1,2 @@
+# standard dependency requirements file when deploying
+-r requirements/prod.txt
