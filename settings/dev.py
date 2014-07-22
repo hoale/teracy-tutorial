@@ -36,6 +36,10 @@ MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
+TEMPLATE_DIRS = (
+    '/path/to/mysite/templates', # Change this to your own directory.
+)
+
 
 INSTALLED_APPS += (
     'django.contrib.admin',
