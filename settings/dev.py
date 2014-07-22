@@ -41,6 +41,7 @@ INSTALLED_APPS += (
     'django.contrib.admin',
     'debug_toolbar',
     'django_nose',
+    'apps.polls',
 )
 
 # Use nose to run all tests
