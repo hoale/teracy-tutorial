@@ -2,7 +2,7 @@ import datetime
 
 from django.test import TestCase
 from django.utils import timezone
-from django.core.urlreslvers import reverse
+from django.core.urlresolvers import reverse
 
 from apps.polls.models import Poll
 
@@ -55,7 +55,7 @@ class PollViewTest(TestCase):
 			self.assertContaints(response, "No polls are available.")
 			self.assertQuerysetEqual(response.context['latest_poll_list'], [])
 
-	def test_index_view_with_a_past_polls():
+	def test_index_view_with_a_past_polls(self):
 		"""
 		Polls with a pub_date in the past should be displayed on the index page
 		"""
@@ -65,9 +65,9 @@ class PollViewTest(TestCase):
 			response.context['latest_poll_list'],
 			['<Poll: Past poll.>']
 			)
-	def test_index_view_with_a_future_polls():
+	def test_index_view_with_a_future_polls(self):
 		"""
-		Polls with a pub_date in the futrue should not be displayed in the
+		Polls with a pub_date in the future should not be displayed in the
 		index page.
 		"""
 		create_poll(question="Future poll.", days= 30)
@@ -76,7 +76,7 @@ class PollViewTest(TestCase):
 			response.context['latest_poll_list'], []
 			)
 
-	def test_index_view_with_future_poll_and_past_poll():
+	def test_index_view_with_future_poll_and_past_poll(self):
 		"""
 		Even if both past and future polls exist, only past polls should be displayed.
 		"""
@@ -101,3 +101,32 @@ class PollViewTest(TestCase):
 			response.context['latest_poll_list'],
 			['<Poll: Past poll 2.>', '<Poll: Past poll 1.>']
 			)
+
+
+class PollIndexDetailTests(TestCase):
+	def test_detail_view_with_a_future_poll(self):
+		"""
+		The detail view of a poll with a pub_date in the future should
+		return a404 not found
+		"""
+		future_poll = create_poll(question="Future poll.", days=5)
+		response = self.client.get(reverse('polls:detail', args=(future_poll.id,)))
+		self.assertEqual(response.status_code, 404)
+
+	def test_detail_view_with_a_past_poll(self):
+		"""
+		The detail view of a poll with a pub_date in the past should display
+		the poll's question
+		"""
+		past_poll = create_poll(question='Past poll.', days=-5)
+		response = self.client.get(reverse('polls:detail', args=(past_poll.id,)))
+		self.assertContaints(response, past_poll.question, status_code=200)
+
+
+
+
+
+
+
+
+
